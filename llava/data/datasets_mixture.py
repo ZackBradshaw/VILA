@@ -77,6 +77,16 @@ def register_datasets_mixtures():
     add_dataset(sharegpt4v_pretrain)
 
     # SFT
+    bluepy = Dataset(
+        dataset_name="bluepy",
+        dataset_type="torch",
+        data_path="./data/data.json",
+        image_path="./images",
+        description="",
+    )
+    add_dataset(bluepy)
+
+
     sharegpt4v_gpt4_100k = Dataset(
         dataset_name="sharegpt4v_gpt4_100k",
         dataset_type="torch",
