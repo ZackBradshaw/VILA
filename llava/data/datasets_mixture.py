@@ -81,7 +81,7 @@ def register_datasets_mixtures():
         dataset_name="bluepy",
         dataset_type="torch",
         data_path="./data/data.json",
-        image_path="./images",
+        image_path="./data/images",
         description="",
     )
     add_dataset(bluepy)
