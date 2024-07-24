@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-
+import json
 
 @dataclass
 class Dataset:
@@ -16,6 +16,18 @@ class Dataset:
     )
     test_script: str = (None,)
     maintainer: str = (None,)
+
+    def filter_large_json(self):
+        if self.data_path.endswith('.json'):
+            with open(self.data_path, 'r') as file:
+                data = json.load(file)
+                if len(json.dumps(data)) > 4096:
+                    # Filter out large JSON objects
+                    # You can modify this part based on your requirements
+                    filtered_data = {k: v for k, v in data.items() if len(json.dumps(v)) <= 4096}
+                    # Save the filtered data back to the file
+                    with open(self.data_path, 'w') as outfile:
+                        json.dump(filtered_data, outfile)
 
 
 DATASETS = {}
