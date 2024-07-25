@@ -34,7 +34,7 @@ torchrun --nnodes=$n_node --nproc_per_node=8 --master_port=25001 \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path $BASE_MODEL_PATH \
     --version llama_3 \
-    --data_mixture coyo_25m+mmc4core+sharegpt4v_pretrain \
+    --data_mixture bluepy \
     --vision_tower google/siglip-so400m-patch14-384 \
     --mm_vision_select_feature cls_patch \
     --mm_projector mlp_downsample \
