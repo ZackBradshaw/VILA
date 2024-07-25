@@ -13,8 +13,7 @@
 # limitations under the License.
 #
 # SPDX-License-Identifier: Apache-2.0
-
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 import base64
 import numpy as np
@@ -147,16 +146,22 @@ def expand2square(pil_img, background_color):
         result.paste(pil_img, ((height - width) // 2, 0))
         return result
 
+
 def process_image(image_file, data_args, image_folder):
     processor = data_args.image_processor
-    if isinstance(image_file, str):
-        if image_folder is not None:
-            image = Image.open(os.path.join(image_folder, image_file)).convert("RGB")
+    try:
+        if isinstance(image_file, str):
+            if image_folder is not None:
+                image = Image.open(os.path.join(image_folder, image_file)).convert("RGB")
+            else:
+                image = Image.open(image_file).convert("RGB")
         else:
-            image = Image.open(image_file).convert("RGB")
-    else:
-        # image is stored in bytearray
-        image = image_file
+            # image is stored in bytearray
+            image = image_file
+    except UnidentifiedImageError:
+        print(f"Warning: Skipping image {image_file} as it cannot be identified.")
+        return None  # You can return a placeholder image here if needed
+
     if data_args.image_aspect_ratio == "resize":
         if hasattr(data_args.image_processor, "crop_size"):
             # CLIP vision tower
@@ -166,7 +171,12 @@ def process_image(image_file, data_args, image_folder):
             assert hasattr(data_args.image_processor, "size")
             crop_size = data_args.image_processor.size
         image = image.resize((crop_size["height"], crop_size["width"]))
-    if data_args.image_aspect_ratio == "pad":
+    elif data_args.image_aspect_ratio == "pad":
+        # Add padding logic if needed
+        pass
+
+    return image
+
 
         def expand2square(pil_img, background_color):
             width, height = pil_img.size
